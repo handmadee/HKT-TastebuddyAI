@@ -1,0 +1,82 @@
+{
+  "expo": {
+    "name": "TastebuddyAI",
+    "slug": "tastebuddy-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icons/logo.jpg",
+    "userInterfaceStyle": "automatic",
+    "scheme": "tastebuddy",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#017bff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tastebuddy.ai",
+      "infoPlist": {
+        "NSCameraUsageDescription": "TastebuddyAI needs access to your camera to scan food and menus.",
+        "NSPhotoLibraryUsageDescription": "TastebuddyAI needs access to your photo library to analyze food images.",
+        "NSLocationWhenInUseUsageDescription": "TastebuddyAI needs access to your location to find nearby restaurants.",
+        "NSMicrophoneUsageDescription": "TastebuddyAI needs access to your microphone for voice features."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/logo.jpg",
+        "backgroundColor": "#017bff"
+      },
+      "package": "com.tastebuddy.ai",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/icons/favlogo.jpg"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "TastebuddyAI needs access to your camera to scan food and menus."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "TastebuddyAI needs access to your photo library to analyze food images.",
+          "savePhotosPermission": "TastebuddyAI needs permission to save photos."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "TastebuddyAI needs access to your location to find nearby restaurants."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "common": {
+    "appName": "TastebuddyAI",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "close": "Đóng",
+    "ok": "OK",
+    "yes": "Có",
+    "no": "Không"
+  },
+  "auth": {
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "signOut": "Đăng xuất",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "forgotPassword": "Quên mật khẩu?",
+    "googleSignIn": "Đăng nhập với Google",
+    "appleSignIn": "Đăng nhập với Apple",
+    "dontHaveAccount": "Chưa có tài khoản?",
+    "alreadyHaveAccount": "Đã có tài khoản?"
+  },
+  "onboarding": {
+    "welcome": "Chào mừng đến với TastebuddyAI",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "foodPreferences": "Sở thích ẩm thực",
+    "allergens": "Dị ứng & Hạn chế",
+    "healthProfile": "Hồ sơ sức khỏe",
+    "skip": "Bỏ qua",
+    "next": "Tiếp theo",
+    "getStarted": "Bắt đầu"
+  },
+  "scanner": {
+    "scanFood": "Quét món ăn",
+    "takePhoto": "Chụp ảnh",
+    "uploadPhoto": "Tải ảnh lên",
+    "analyzing": "Đang phân tích...",
+    "nutritionInfo": "Thông tin dinh dưỡng",
+    "calories": "Calo",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Chất béo",
+    "safe": "An toàn",
+    "warning": "Cảnh báo",
+    "danger": "Cảnh báo dị ứng"
+  },
+  "menu": {
+    "translateMenu": "Dịch thực đơn",
+    "translation": "Bản dịch",
+    "currency": "Tiền tệ",
+    "menuItems": "Món ăn"
+  },
+  "profile": {
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt",
+    "healthMetrics": "Chỉ số sức khỏe",
+    "favorites": "Yêu thích",
+    "language": "Ngôn ngữ",
+    "theme": "Giao diện",
+    "notifications": "Thông báo",
+    "privacy": "Quyền riêng tư",
+    "about": "Giới thiệu"
+  },
+  "nutrition": {
+    "dailySummary": "Tổng kết ngày",
+    "targetCalories": "Calo mục tiêu",
+    "consumed": "Đã tiêu thụ",
+    "remaining": "Còn lại",
+    "breakfast": "Bữa sáng",
+    "lunch": "Bữa trưa",
+    "dinner": "Bữa tối",
+    "snack": "Bữa phụ"
+  },
+  "errors": {
+    "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
+    "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+    "permissionDenied": "Quyền truy cập bị từ chối.",
+    "cameraError": "Lỗi camera. Vui lòng kiểm tra quyền truy cập.",
+    "unknownError": "Đã xảy ra lỗi không xác định."
+  }
+}
