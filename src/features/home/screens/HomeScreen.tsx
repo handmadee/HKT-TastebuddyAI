@@ -77,11 +77,11 @@ export const HomeScreen: React.FC = () => {
                     </View>
                     <TouchableOpacity
                         style={styles.avatarButton}
-                        onPress={() => router.push('/(main)/(tabs)/profile')}
+                        onPress={() => router.push('/(main)/(tabs)/profile' as any)}
                     >
                         <Image
                             source={{
-                                uri: user?.profileImage || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'User'),
+                                uri: (user as any)?.profileImage || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'User'),
                             }}
                             style={styles.avatar}
                         />

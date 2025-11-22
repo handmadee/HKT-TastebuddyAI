@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     nutritionUnit: {
         ...typography.styles.bodySmall,
         color: colors.textSecondary,
-        fontWeight: typography.fontWeight.regular,
+        fontWeight: typography.fontWeight.normal,
     },
     nutritionLabel: {
         ...typography.styles.bodySmall,

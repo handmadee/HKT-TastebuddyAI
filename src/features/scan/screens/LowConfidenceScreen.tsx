@@ -18,7 +18,7 @@ export const LowConfidenceScreen: React.FC = () => {
     const [dishName, setDishName] = useState('');
 
     if (!currentScan) {
-        router.replace('/scan');
+        router.replace('/scan' as any);
         return null;
     }
 
@@ -35,17 +35,17 @@ export const LowConfidenceScreen: React.FC = () => {
             // TODO: Send feedback to backend to improve AI
             // await apiClient.post('/food/feedback', { dishName, imageUri });
 
-            router.push('/scan/result');
+            router.push('/scan/result' as any);
         }
     };
 
     const handleScanAgain = () => {
-        router.replace('/scan');
+        router.replace('/scan' as any);
     };
 
     const handleLogManually = () => {
         // TODO: Navigate to manual food logging
-        router.push('/(main)/(tabs)/journal');
+        router.push('/(main)/(tabs)/journal' as any);
     };
 
     return (

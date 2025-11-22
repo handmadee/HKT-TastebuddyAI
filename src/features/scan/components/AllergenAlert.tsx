@@ -99,9 +99,9 @@ const AllergenBadge: React.FC<AllergenBadgeProps> = ({ allergen, textColor }) =>
 const getBackgroundColor = (severity: 'safe' | 'warning' | 'danger'): string => {
     switch (severity) {
         case 'safe':
-            return colors.success;
+            return colors.secondary;
         case 'warning':
-            return colors.warning;
+            return colors.accent;
         case 'danger':
             return colors.error;
         default:
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     allergenName: {
-        ...typography.styles.bodyLarge,
+        ...typography.styles.bodyRegular,
         fontWeight: typography.fontWeight.bold,
         textTransform: 'capitalize',
         marginBottom: spacing.xs,

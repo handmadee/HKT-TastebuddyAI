@@ -57,7 +57,7 @@ export const BaseButton: React.FC<BaseButtonProps> = ({
         styles.text,
         styles[`text_${variant}`],
         styles[`textSize_${size}`],
-        isDisabled && styles.textDisabled,
+        disabled ? { color: colors.textDisabled } : {},
     ];
 
     return (
