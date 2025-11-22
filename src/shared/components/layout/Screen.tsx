@@ -32,7 +32,7 @@ export const Screen: React.FC<ScreenProps> = ({
     };
 
     const contentStyle: ViewStyle[] = [
-        padding && styles.padding,
+        padding ? styles.padding : {},
         style as ViewStyle,
     ];
 

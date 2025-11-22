@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         marginTop: spacing.xs,
     },
     errorIcon: {
-        marginRight: spacing.xxs,
+        marginRight: 2,
     },
     errorText: {
         ...typography.styles.caption,

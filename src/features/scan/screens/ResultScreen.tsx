@@ -94,7 +94,7 @@ export const ResultScreen: React.FC = () => {
                             • No allergens detected for your profile.
                         </Text>
                         {currentScan.name.toLowerCase().includes('vegetarian') ||
-                        currentScan.name.toLowerCase().includes('vegan') ? (
+                            currentScan.name.toLowerCase().includes('vegan') ? (
                             <Text style={styles.safeMessage}>
                                 • Matches your dietary preference.
                             </Text>
@@ -132,7 +132,7 @@ export const ResultScreen: React.FC = () => {
                         size="large"
                         onPress={() => {
                             // TODO: Add to food journal
-                            router.push('/(main)/(tabs)/journal');
+                            router.push('/(main)/(tabs)/journal' as any);
                         }}
                         fullWidth
                         style={styles.secondaryButton}
@@ -241,13 +241,13 @@ const styles = StyleSheet.create({
     },
     safeIcon: {
         fontSize: 40,
-        color: colors.success,
+        color: colors.secondary,
         textAlign: 'center',
         marginBottom: spacing.sm,
     },
     safeTitle: {
         ...typography.styles.h3,
-        color: colors.success,
+        color: colors.secondary,
         fontWeight: typography.fontWeight.bold,
         marginBottom: spacing.sm,
         textAlign: 'center',

@@ -94,41 +94,41 @@ const shadowConfig = {
  * Get platform-specific shadow style
  */
 export const shadows = {
-    small: Platform.select({
+    small: Platform.select<any>({
         ios: shadowConfig.small.ios,
         android: shadowConfig.small.android,
         default: {},
-    }) as any,
-    light: Platform.select({
+    }),
+    light: Platform.select<any>({
         ios: shadowConfig.light.ios,
         android: shadowConfig.light.android,
         default: {},
-    }) as any,
-    normal: Platform.select({
+    }),
+    normal: Platform.select<any>({
         ios: shadowConfig.normal.ios,
         android: shadowConfig.normal.android,
         default: {},
-    }) as any,
-    strong: Platform.select({
+    }),
+    strong: Platform.select<any>({
         ios: shadowConfig.strong.ios,
         android: shadowConfig.strong.android,
         default: {},
-    }) as any,
-    button: Platform.select({
+    }),
+    button: Platform.select<any>({
         ios: shadowConfig.button.ios,
         android: shadowConfig.button.android,
         default: {},
-    }) as any,
-    top: Platform.select({
+    }),
+    top: Platform.select<any>({
         ios: shadowConfig.top.ios,
         android: shadowConfig.top.android,
         default: {},
-    }) as any,
-    card: Platform.select({
+    }),
+    card: Platform.select<any>({
         ios: shadowConfig.card.ios,
         android: shadowConfig.card.android,
         default: {},
-    }) as any,
+    }),
     none: {},
 };
 

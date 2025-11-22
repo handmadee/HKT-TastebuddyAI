@@ -98,7 +98,8 @@ class AsyncStorageService {
      */
     async getAllKeys(): Promise<string[]> {
         try {
-            return await AsyncStorage.getAllKeys();
+            const keys = await AsyncStorage.getAllKeys();
+            return [...keys];
         } catch (error) {
             console.error('Error getting all keys from async storage:', error);
             return [];

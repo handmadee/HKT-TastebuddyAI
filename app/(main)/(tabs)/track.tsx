@@ -8,19 +8,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Screen } from '../../../src/shared/components/layout/Screen';
 import { colors, typography, spacing } from '../../../src/theme';
+import { TrackScreen } from '../../../src/features/track/screens/TrackScreen';
 
-export default function TrackScreen() {
-    return (
-        <Screen safeArea padding>
-            <View style={styles.container}>
-                <Text style={styles.title}>Track</Text>
-                <Text style={styles.subtitle}>
-                    Nutrition tracking coming soon...
-                </Text>
-            </View>
-        </Screen>
-    );
-}
+export default TrackScreen;
 
 const styles = StyleSheet.create({
     container: {

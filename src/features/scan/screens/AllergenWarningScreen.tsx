@@ -72,7 +72,7 @@ export const AllergenWarningScreen: React.FC = () => {
     }, []);
 
     if (!currentScan) {
-        router.replace('/scan');
+        router.replace('/scan' as any);
         return null;
     }
 
@@ -83,17 +83,17 @@ export const AllergenWarningScreen: React.FC = () => {
 
     const handleViewDetails = async () => {
         await saveScanResult(currentScan);
-        router.push('/scan/result');
+        router.push('/scan/result' as any);
     };
 
     const handleScanAgain = () => {
-        router.replace('/scan');
+        router.replace('/scan' as any);
     };
 
     const handleSeeAlternatives = () => {
         // TODO: Navigate to alternatives screen
         // For now, just go to home
-        router.push('/(main)/(tabs)');
+        router.push('/(main)/(tabs)' as any);
     };
 
     return (
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
         marginBottom: spacing.md,
     },
     warningSubtitle: {
-        ...typography.styles.bodyLarge,
+        ...typography.styles.bodyRegular,
         color: colors.backgroundWhite,
         lineHeight: 24,
     },
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     allergenName: {
-        ...typography.styles.bodyLarge,
+        ...typography.styles.bodyRegular,
         color: colors.textPrimary,
         fontWeight: typography.fontWeight.semibold,
         marginBottom: spacing.xs,
