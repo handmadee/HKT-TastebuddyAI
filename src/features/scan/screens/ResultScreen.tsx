@@ -85,8 +85,22 @@ export const ResultScreen: React.FC = () => {
                     </View>
                 </View>
 
-                {/* Allergen Warning (if applicable) */}
-                {matchedAllergens.length > 0 && (
+                {/* Safety Status */}
+                {matchedAllergens.length === 0 ? (
+                    <View style={styles.safeCard}>
+                        <Text style={styles.safeIcon}>✓</Text>
+                        <Text style={styles.safeTitle}>Safe for you</Text>
+                        <Text style={styles.safeMessage}>
+                            • No allergens detected for your profile.
+                        </Text>
+                        {currentScan.name.toLowerCase().includes('vegetarian') ||
+                        currentScan.name.toLowerCase().includes('vegan') ? (
+                            <Text style={styles.safeMessage}>
+                                • Matches your dietary preference.
+                            </Text>
+                        ) : null}
+                    </View>
+                ) : (
                     <AllergenAlert
                         allergens={matchedAllergens}
                         severity={severityLevel}
@@ -218,6 +232,30 @@ const styles = StyleSheet.create({
     },
     secondaryButton: {
         marginTop: spacing.sm,
+    },
+    safeCard: {
+        backgroundColor: '#ECFDF5', // Light green
+        borderRadius: borderRadius.card,
+        padding: spacing.lg,
+        marginBottom: spacing.lg,
+    },
+    safeIcon: {
+        fontSize: 40,
+        color: colors.success,
+        textAlign: 'center',
+        marginBottom: spacing.sm,
+    },
+    safeTitle: {
+        ...typography.styles.h3,
+        color: colors.success,
+        fontWeight: typography.fontWeight.bold,
+        marginBottom: spacing.sm,
+        textAlign: 'center',
+    },
+    safeMessage: {
+        ...typography.styles.bodyRegular,
+        color: '#065F46', // Dark green
+        marginBottom: spacing.xs,
     },
     timestamp: {
         ...typography.styles.caption,

@@ -20,6 +20,12 @@ export const AnalyzingScreen: React.FC = () => {
     useEffect(() => {
         // When analysis is complete, navigate to appropriate screen
         if (!isAnalyzing && currentScan) {
+            // Check confidence level first
+            if (currentScan.confidence < 70) {
+                router.replace('/scan/low-confidence');
+                return;
+            }
+
             // Check for allergens
             const matchedAllergens = checkForUserAllergens(
                 currentScan.allergens,

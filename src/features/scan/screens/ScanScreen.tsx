@@ -7,6 +7,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { CameraView, CameraType } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { Screen } from '../../../shared/components/layout/Screen';
 import { CaptureButton } from '../components/CaptureButton';
@@ -73,6 +74,43 @@ export const ScanScreen: React.FC = () => {
         setCameraType((current) => (current === 'back' ? 'front' : 'back'));
     };
 
+    const handlePickImage = async () => {
+        try {
+            // Request photo library permission
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+            if (status !== 'granted') {
+                Alert.alert(
+                    'Permission Required',
+                    'Please grant photo library access to select images.',
+                    [{ text: 'OK' }]
+                );
+                return;
+            }
+
+            // Launch image picker
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0]?.uri) {
+                logger.info('Image selected from gallery', { uri: result.assets[0].uri });
+
+                // Navigate to analyzing screen
+                router.push('/scan/analyzing');
+
+                // Start analysis
+                await analyzeFoodImage(result.assets[0].uri);
+            }
+        } catch (error) {
+            logger.error('Failed to pick image', { error });
+            Alert.alert('Error', 'Failed to select image. Please try again.');
+        }
+    };
+
     if (!hasPermission) {
         return (
             <Screen safeArea>
@@ -111,7 +149,9 @@ export const ScanScreen: React.FC = () => {
                             <Text style={styles.iconButtonText}>✕</Text>
                         </TouchableOpacity>
 
-                        <Text style={styles.topBarTitle}>Scan Food</Text>
+                        <View style={styles.topBarCenter}>
+                            <Text style={styles.hintText}>Good lighting helps with accuracy</Text>
+                        </View>
 
                         <TouchableOpacity
                             style={styles.iconButton}
@@ -144,8 +184,11 @@ export const ScanScreen: React.FC = () => {
                         />
 
                         <View style={styles.bottomBarSpacer}>
-                            <TouchableOpacity style={styles.galleryButton}>
-                                <Text style={styles.galleryButtonText}>📁</Text>
+                            <TouchableOpacity
+                                style={styles.galleryButton}
+                                onPress={handlePickImage}
+                            >
+                                <Text style={styles.galleryButtonText}>🖼️</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -209,10 +252,16 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.lg,
         backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
-    topBarTitle: {
-        ...typography.styles.h3,
+    topBarCenter: {
+        flex: 1,
+        alignItems: 'center',
+        paddingHorizontal: spacing.md,
+    },
+    hintText: {
+        ...typography.styles.bodySmall,
         color: colors.backgroundWhite,
-        fontWeight: typography.fontWeight.semibold,
+        fontWeight: typography.fontWeight.medium,
+        textAlign: 'center',
     },
     iconButton: {
         width: 40,

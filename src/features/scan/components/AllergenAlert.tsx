@@ -52,19 +52,46 @@ interface AllergenBadgeProps {
 }
 
 const AllergenBadge: React.FC<AllergenBadgeProps> = ({ allergen, textColor }) => {
+    const getSeverityIcon = (severity: string) => {
+        switch (severity) {
+            case 'severe':
+                return '🔴';
+            case 'moderate':
+                return '⚠️';
+            case 'mild':
+                return '🟡';
+            default:
+                return '⚪';
+        }
+    };
+
+    const getRiskDescription = (severity: string) => {
+        switch (severity) {
+            case 'severe':
+                return 'Life-threatening. Risk: Anaphylaxis.';
+            case 'moderate':
+                return 'Risk: Hives, swelling.';
+            case 'mild':
+                return 'Risk: Mild discomfort.';
+            default:
+                return '';
+        }
+    };
+
     return (
         <View style={styles.allergenBadge}>
-            <Text style={[styles.allergenName, { color: textColor }]}>
-                {allergen.type.replace(/-/g, ' ')}
-            </Text>
-            <Text style={[styles.allergenSeverity, { color: textColor }]}>
-                {allergen.severity} ({allergen.confidence}%)
-            </Text>
-            {allergen.source && (
-                <Text style={[styles.allergenSource, { color: textColor }]}>
-                    Source: {allergen.source}
-                </Text>
-            )}
+            <View style={styles.allergenHeader}>
+                <Text style={styles.severityIcon}>{getSeverityIcon(allergen.severity)}</Text>
+                <View style={styles.allergenInfo}>
+                    <Text style={[styles.allergenName, { color: textColor }]}>
+                        {allergen.type.replace(/-/g, ' ')}
+                        {allergen.source ? ` (${allergen.source})` : ''}
+                    </Text>
+                    <Text style={[styles.riskDescription, { color: textColor }]}>
+                        Your allergy: {allergen.severity}. {getRiskDescription(allergen.severity)}
+                    </Text>
+                </View>
+            </View>
         </View>
     );
 };
@@ -117,16 +144,33 @@ const styles = StyleSheet.create({
         marginTop: spacing.md,
     },
     allergenBadge: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: borderRadius.badge,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: borderRadius.card,
         padding: spacing.md,
         marginBottom: spacing.sm,
+    },
+    allergenHeader: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+    severityIcon: {
+        fontSize: 24,
+        marginRight: spacing.sm,
+    },
+    allergenInfo: {
+        flex: 1,
     },
     allergenName: {
         ...typography.styles.bodyLarge,
         fontWeight: typography.fontWeight.bold,
         textTransform: 'capitalize',
         marginBottom: spacing.xs,
+        color: colors.textPrimary,
+    },
+    riskDescription: {
+        ...typography.styles.bodySmall,
+        lineHeight: 18,
+        color: colors.error,
     },
     allergenSeverity: {
         ...typography.styles.bodySmall,
