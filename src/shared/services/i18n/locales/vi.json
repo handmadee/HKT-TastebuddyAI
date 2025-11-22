@@ -156,6 +156,22 @@
     "dinner": "Bữa tối",
     "snack": "Bữa phụ"
   },
+  "home": {
+    "appName": "PhoFinder AI",
+    "todaysPick": "Món Phở Hôm Nay",
+    "nearbySpots": "Quán Phở Gần Đây",
+    "seeAll": "Xem Tất Cả",
+    "viewDetails": "Xem Chi Tiết",
+    "justNow": "Vừa xong",
+    "minutesAgo": "{{minutes}} phút trước",
+    "hoursAgo": "{{hours}} giờ trước",
+    "tabs": {
+      "home": "Trang Chủ",
+      "scan": "Quét",
+      "track": "Theo Dõi",
+      "profile": "Hồ Sơ"
+    }
+  },
   "errors": {
     "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
     "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
