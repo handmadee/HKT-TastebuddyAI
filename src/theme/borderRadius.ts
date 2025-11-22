@@ -21,6 +21,7 @@ export const borderRadius = {
     modal: 16,
     badge: 4,
     avatar: 9999,
+    small: 4,
 } as const;
 
 export type BorderRadius = typeof borderRadius;

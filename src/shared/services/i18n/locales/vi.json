@@ -36,7 +36,84 @@
     "healthProfile": "Hồ sơ sức khỏe",
     "skip": "Bỏ qua",
     "next": "Tiếp theo",
-    "getStarted": "Bắt đầu"
+    "back": "Quay lại",
+    "getStarted": "Bắt đầu",
+    "language": {
+      "title": "Chọn ngôn ngữ của bạn",
+      "subtitle": "Chọn ngôn ngữ ưa thích cho ứng dụng"
+    },
+    "dietaryPreferences": {
+      "title": "Sở thích ăn uống",
+      "subtitle": "Chọn tất cả những gì phù hợp với bạn"
+    },
+    "allergensScreen": {
+      "title": "Dị ứng thực phẩm",
+      "subtitle": "Cho chúng tôi biết về các loại dị ứng thực phẩm của bạn. Chọn mức độ nghiêm trọng cho mỗi loại.",
+      "hint": "Điều này giúp chúng tôi cảnh báo bạn về thực phẩm có thể gây nguy hiểm"
+    },
+    "nutritionGoals": {
+      "title": "Thiết lập mục tiêu dinh dưỡng",
+      "subtitle": "Cho chúng tôi biết về bản thân bạn để tính toán chỉ tiêu phù hợp",
+      "gender": "Giới tính",
+      "age": "Tuổi",
+      "weight": "Cân nặng (kg)",
+      "height": "Chiều cao (cm)",
+      "activityLevel": "Mức độ hoạt động",
+      "goal": "Mục tiêu của bạn",
+      "healthConditions": "Tình trạng sức khỏe (Tùy chọn)"
+    },
+    "dailyTargets": {
+      "title": "Chỉ tiêu hàng ngày",
+      "subtitle": "Dựa trên thông tin của bạn, đây là chỉ tiêu dinh dưỡng được cá nhân hóa",
+      "dailyCalorieTarget": "Chỉ tiêu Calories hàng ngày",
+      "macrosBreakdown": "Phân bổ chất dinh dưỡng đa lượng",
+      "info": "Các chỉ tiêu này được tính toán dựa trên tuổi, cân nặng, chiều cao, mức độ hoạt động và mục tiêu sức khỏe của bạn. Bạn có thể điều chỉnh chúng sau trong cài đặt."
+    },
+    "smartFeatures": {
+      "title": "Bật tính năng thông minh",
+      "subtitle": "Cho phép quyền truy cập để mở khóa các tính năng AI mạnh mẽ",
+      "cameraAccess": "Truy cập Camera",
+      "cameraDescription": "Quét thực phẩm và thực đơn ngay lập tức bằng camera",
+      "notifications": "Thông báo",
+      "notificationsDescription": "Nhận lời nhắc và thông tin dinh dưỡng suốt cả ngày",
+      "info": "Bạn có thể thay đổi các quyền này bất cứ lúc nào trong cài đặt thiết bị."
+    },
+    "locationPermission": {
+      "title": "Tìm địa điểm gần bạn",
+      "subtitle": "Bật vị trí để khám phá nhà hàng và các lựa chọn thực phẩm gần đây",
+      "enableLocation": "Bật vị trí",
+      "skipForNow": "Bỏ qua bây giờ",
+      "locationEnabled": "Truy cập vị trí đã được bật!",
+      "features": {
+        "restaurants": "Tìm nhà hàng phù hợp với sở thích ăn uống của bạn",
+        "recommendations": "Nhận gợi ý thực phẩm được cá nhân hóa dựa trên vị trí của bạn",
+        "discover": "Khám phá các địa điểm mới với các lựa chọn thân thiện với dinh dưỡng"
+      }
+    },
+    "completion": {
+      "title": "Bạn đã sẵn sàng!",
+      "profileComplete": "Hồ sơ của bạn đã hoàn tất!",
+      "whatsNext": "Tiếp theo là gì?",
+      "ready": "Sẵn sàng bắt đầu hành trình ăn uống lành mạnh của bạn?",
+      "features": {
+        "scanFood": {
+          "title": "Quét thực phẩm",
+          "description": "Sử dụng AI để phân tích dinh dưỡng và kiểm tra dị ứng ngay lập tức"
+        },
+        "findOptions": {
+          "title": "Tìm lựa chọn lành mạnh",
+          "description": "Khám phá nhà hàng phù hợp với sở thích ăn uống của bạn"
+        },
+        "trackProgress": {
+          "title": "Theo dõi tiến trình",
+          "description": "Giám sát dinh dưỡng hàng ngày và đạt được mục tiêu sức khỏe"
+        },
+        "translateMenus": {
+          "title": "Dịch thực đơn",
+          "description": "Đọc thực đơn bằng bất kỳ ngôn ngữ nào với dịch thuật tức thì"
+        }
+      }
+    }
   },
   "scanner": {
     "scanFood": "Quét món ăn",

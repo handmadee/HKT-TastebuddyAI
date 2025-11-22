@@ -36,7 +36,84 @@
     "healthProfile": "Health Profile",
     "skip": "Skip",
     "next": "Next",
-    "getStarted": "Get Started"
+    "back": "Back",
+    "getStarted": "Get Started",
+    "language": {
+      "title": "Choose your language",
+      "subtitle": "Select your preferred language for the app"
+    },
+    "dietaryPreferences": {
+      "title": "Dietary preferences",
+      "subtitle": "Select all that apply to you"
+    },
+    "allergensScreen": {
+      "title": "Allergens",
+      "subtitle": "Let us know about any food allergies. Toggle severity levels for each.",
+      "hint": "This helps us warn you about potentially dangerous foods"
+    },
+    "nutritionGoals": {
+      "title": "Set your nutrition goals",
+      "subtitle": "Tell us about yourself to calculate your personalized targets",
+      "gender": "Gender",
+      "age": "Age",
+      "weight": "Weight (kg)",
+      "height": "Height (cm)",
+      "activityLevel": "Activity Level",
+      "goal": "Your Goal",
+      "healthConditions": "Health Conditions (Optional)"
+    },
+    "dailyTargets": {
+      "title": "Your daily targets",
+      "subtitle": "Based on your profile, here are your personalized nutrition goals",
+      "dailyCalorieTarget": "Daily Calorie Target",
+      "macrosBreakdown": "Macronutrients Breakdown",
+      "info": "These targets are calculated based on your age, weight, height, activity level, and health goals. You can adjust them later in settings."
+    },
+    "smartFeatures": {
+      "title": "Enable smart features",
+      "subtitle": "Allow permissions to unlock powerful AI features",
+      "cameraAccess": "Camera Access",
+      "cameraDescription": "Scan food items and menus instantly with your camera",
+      "notifications": "Notifications",
+      "notificationsDescription": "Get reminders and nutrition insights throughout the day",
+      "info": "You can change these permissions anytime in your device settings."
+    },
+    "locationPermission": {
+      "title": "Find places near you",
+      "subtitle": "Enable location to discover restaurants and food options nearby",
+      "enableLocation": "Enable Location",
+      "skipForNow": "Skip for now",
+      "locationEnabled": "Location access enabled!",
+      "features": {
+        "restaurants": "Find restaurants that match your dietary preferences",
+        "recommendations": "Get personalized food recommendations based on your location",
+        "discover": "Discover new places with nutrition-friendly options"
+      }
+    },
+    "completion": {
+      "title": "You're all set!",
+      "profileComplete": "Your profile is complete!",
+      "whatsNext": "What's next?",
+      "ready": "Ready to start your healthy eating journey?",
+      "features": {
+        "scanFood": {
+          "title": "Scan Your Food",
+          "description": "Use AI to instantly analyze nutrition and check for allergens"
+        },
+        "findOptions": {
+          "title": "Find Healthy Options",
+          "description": "Discover restaurants that match your dietary preferences"
+        },
+        "trackProgress": {
+          "title": "Track Your Progress",
+          "description": "Monitor your daily nutrition and reach your health goals"
+        },
+        "translateMenus": {
+          "title": "Translate Menus",
+          "description": "Read menus in any language with instant translation"
+        }
+      }
+    }
   },
   "scanner": {
     "scanFood": "Scan Food",

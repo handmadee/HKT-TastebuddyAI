@@ -8,6 +8,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '../src/shared/stores/authStore';
+import { useOnboardingStore } from '../src/features/onboarding/stores/onboardingStore';
 import { useTranslation } from '../src/shared/hooks/useTranslation';
 import { Screen } from '../src/shared/components/layout/Screen';
 import { Loading } from '../src/shared/components/feedback/Loading';
@@ -18,19 +19,38 @@ export default function Index() {
     const router = useRouter();
     const { t } = useTranslation();
     const { isAuthenticated, isLoading } = useAuthStore();
+    const { completed: onboardingCompleted, hydrateOnboarding } = useOnboardingStore();
+    const [isChecking, setIsChecking] = React.useState(true);
 
-    // Auto-navigate based on auth state
+    // Load onboarding status from storage
     React.useEffect(() => {
-        if (!isLoading) {
+        const loadOnboardingStatus = async () => {
+            await hydrateOnboarding();
+            setIsChecking(false);
+        };
+        loadOnboardingStatus();
+    }, []);
+
+    // Auto-navigate based on auth state and onboarding status
+    React.useEffect(() => {
+        if (!isLoading && !isChecking) {
             if (isAuthenticated) {
-                router.replace('/(main)/(tabs)');
+                // User is authenticated
+                if (onboardingCompleted) {
+                    // Onboarding is complete, go to main app
+                    router.replace('/(main)/(tabs)');
+                } else {
+                    // Onboarding not complete, go to onboarding
+                    router.replace('/(onboarding)/language');
+                }
             } else {
+                // User is not authenticated, go to auth flow
                 router.replace('/(auth)/welcome');
             }
         }
-    }, [isLoading, isAuthenticated]);
+    }, [isLoading, isAuthenticated, onboardingCompleted, isChecking]);
 
-    if (isLoading) {
+    if (isLoading || isChecking) {
         return <Loading message={t('common.loading')} />;
     }
 
@@ -49,8 +69,7 @@ export default function Index() {
                         size="large"
                         fullWidth
                         onPress={() => {
-                            // TODO: Navigate to onboarding or main app
-                            console.log('Get started pressed');
+                            router.push('/(onboarding)/language');
                         }}
                     />
                 </View>
