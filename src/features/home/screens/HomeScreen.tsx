@@ -5,18 +5,25 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { colors, spacing, typography, shadows } from '@/theme';
+import { colors, spacing, typography, shadows, borderRadius } from '@/theme';
 import { Screen } from '@/shared/components/layout/Screen';
-import { FoodCard, LocationCard } from '../components';
+import { FoodCard, LocationCard, CaloriesSummary, QuickActionsSection } from '../components';
 import { mockFoodPick, mockNearbyLocations } from '../constants/mockData';
 import { useTranslation } from '@/shared/hooks/useTranslation';
+import { useAuthStore } from '@/shared/stores/authStore';
 
 export const HomeScreen: React.FC = () => {
     const router = useRouter();
     const { t } = useTranslation();
+    const { user } = useAuthStore();
+
+    // Mock data - will be replaced with actual data from stores/API
+    const currentCalories = 1240;
+    const targetCalories = 1850;
+    const userLocation = 'Hanoi, Vietnam';
 
     const formatTimestamp = (date: Date) => {
         const now = new Date();
@@ -37,17 +44,27 @@ export const HomeScreen: React.FC = () => {
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerContent}>
-                    <View>
+                    <View style={styles.headerLeft}>
                         <Text style={styles.headerTitle}>{t('home.appName')}</Text>
-                        <Text style={styles.headerSubtitle}>
-                            {new Date().toLocaleDateString('en-US', {
-                                day: 'numeric',
-                                month: 'long',
-                            })}
-                        </Text>
+                        <View style={styles.locationRow}>
+                            <Ionicons
+                                name="location"
+                                size={14}
+                                color={colors.primary}
+                            />
+                            <Text style={styles.locationText}>{userLocation}</Text>
+                        </View>
                     </View>
-                    <TouchableOpacity style={styles.menuButton}>
-                        <Ionicons name="menu" size={28} color={colors.textPrimary} />
+                    <TouchableOpacity
+                        style={styles.avatarButton}
+                        onPress={() => router.push('/(main)/(tabs)/profile')}
+                    >
+                        <Image
+                            source={{
+                                uri: user?.profileImage || 'https://ui-avatars.com/api/?name=' + (user?.fullName || 'User'),
+                            }}
+                            style={styles.avatar}
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -58,6 +75,32 @@ export const HomeScreen: React.FC = () => {
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
+                {/* Quick Actions Section */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                        {t('home.quickActions')}
+                    </Text>
+                    <QuickActionsSection
+                        translations={{
+                            scanDish: t('home.scanDish'),
+                            translate: t('home.translate'),
+                            findFood: t('home.findFood'),
+                        }}
+                    />
+                </View>
+
+                {/* Today's Summary Section */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>
+                        {t('home.todaysSummary')}
+                    </Text>
+                    <CaloriesSummary
+                        current={currentCalories}
+                        target={targetCalories}
+                        label={t('home.calories')}
+                    />
+                </View>
+
                 {/* Today's Pick Section */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>
@@ -121,18 +164,32 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: spacing.container.horizontal,
     },
+    headerLeft: {
+        flex: 1,
+    },
     headerTitle: {
         ...typography.styles.h2,
-        color: colors.primary,
+        color: colors.textPrimary,
         fontWeight: typography.fontWeight.bold,
+        marginBottom: spacing.xs,
     },
-    headerSubtitle: {
+    locationRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.xs,
+    },
+    locationText: {
         ...typography.styles.bodySmall,
-        color: colors.textSecondary,
-        marginTop: spacing.xs,
+        color: colors.primary,
     },
-    menuButton: {
-        padding: spacing.sm,
+    avatarButton: {
+        marginLeft: spacing.md,
+    },
+    avatar: {
+        width: 44,
+        height: 44,
+        borderRadius: borderRadius.avatar,
+        backgroundColor: colors.backgroundGray,
     },
     scrollView: {
         flex: 1,

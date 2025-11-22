@@ -158,6 +158,12 @@
   },
   "home": {
     "appName": "PhoFinder AI",
+    "quickActions": "Thao Tác Nhanh",
+    "scanDish": "Quét Món Ăn",
+    "translate": "Dịch",
+    "findFood": "Tìm Đồ Ăn",
+    "todaysSummary": "Tổng Kết Hôm Nay",
+    "calories": "Calo",
     "todaysPick": "Món Phở Hôm Nay",
     "nearbySpots": "Quán Phở Gần Đây",
     "seeAll": "Xem Tất Cả",
