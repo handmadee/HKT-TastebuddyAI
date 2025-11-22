@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import * as Camera from 'expo-camera';
+import { useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Location from 'expo-location';
 import { Alert, Linking } from 'react-native';
@@ -21,6 +21,9 @@ interface PermissionState {
 }
 
 export const usePermissions = () => {
+    const [cameraPermission, requestCameraPermissionHook] = useCameraPermissions();
+    const [microphonePermission, requestMicrophonePermissionHook] = useMicrophonePermissions();
+
     const [permissionState, setPermissionState] = useState<PermissionState>({
         camera: 'undetermined',
         microphone: 'undetermined',
@@ -33,10 +36,10 @@ export const usePermissions = () => {
      */
     const requestCameraPermission = useCallback(async (): Promise<boolean> => {
         try {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            const granted = status === 'granted';
+            const response = await requestCameraPermissionHook();
+            const granted = response.granted;
 
-            setPermissionState(prev => ({ ...prev, camera: status }));
+            setPermissionState(prev => ({ ...prev, camera: granted ? 'granted' : 'denied' }));
 
             if (!granted) {
                 showPermissionDeniedAlert('CAMERA');
@@ -47,17 +50,17 @@ export const usePermissions = () => {
             console.error('Error requesting camera permission:', error);
             return false;
         }
-    }, []);
+    }, [requestCameraPermissionHook]);
 
     /**
      * Request microphone permission
      */
     const requestMicrophonePermission = useCallback(async (): Promise<boolean> => {
         try {
-            const { status } = await Camera.requestMicrophonePermissionsAsync();
-            const granted = status === 'granted';
+            const response = await requestMicrophonePermissionHook();
+            const granted = response.granted;
 
-            setPermissionState(prev => ({ ...prev, microphone: status }));
+            setPermissionState(prev => ({ ...prev, microphone: granted ? 'granted' : 'denied' }));
 
             if (!granted) {
                 showPermissionDeniedAlert('MICROPHONE');
@@ -68,7 +71,7 @@ export const usePermissions = () => {
             console.error('Error requesting microphone permission:', error);
             return false;
         }
-    }, []);
+    }, [requestMicrophonePermissionHook]);
 
     /**
      * Request photo library permission
@@ -116,11 +119,10 @@ export const usePermissions = () => {
      * Check camera permission status
      */
     const checkCameraPermission = useCallback(async (): Promise<boolean> => {
-        const permission = await Camera.getCameraPermissionsAsync();
-        const granted = permission.status === 'granted';
-        setPermissionState(prev => ({ ...prev, camera: permission.status }));
+        const granted = cameraPermission?.granted || false;
+        setPermissionState(prev => ({ ...prev, camera: granted ? 'granted' : 'denied' }));
         return granted;
-    }, []);
+    }, [cameraPermission]);
 
     /**
      * Check photo library permission status
