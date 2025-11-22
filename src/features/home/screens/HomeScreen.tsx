@@ -136,6 +136,8 @@ export const HomeScreen: React.FC = () => {
                             name={location.name}
                             rating={location.rating}
                             distance={location.distance}
+                            safetyStatus={location.safetyStatus}
+                            safetyLabel={location.safetyLabel}
                             onPress={() => {
                                 // Navigate to location details
                                 console.log('View location:', location.id);

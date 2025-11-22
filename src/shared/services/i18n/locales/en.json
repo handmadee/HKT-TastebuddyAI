@@ -157,15 +157,15 @@
     "snack": "Snack"
   },
   "home": {
-    "appName": "PhoFinder AI",
+    "appName": "TastebuddyAI",
     "quickActions": "Quick Actions",
     "scanDish": "Scan Dish",
     "translate": "Translate",
     "findFood": "Find Food",
     "todaysSummary": "Today's Summary",
     "calories": "Calories",
-    "todaysPick": "Today's Pho Pick",
-    "nearbySpots": "Nearby Pho Spots",
+    "todaysPick": "Today's Pick",
+    "nearbySpots": "Nearby Spots",
     "seeAll": "See All",
     "viewDetails": "View Details",
     "justNow": "Just now",

@@ -12,11 +12,15 @@ export interface FoodPick {
     category?: string;
 }
 
+export type SafetyStatus = 'safe' | 'warning' | 'danger';
+
 export interface NearbyLocation {
     id: string;
     name: string;
     rating: number;
     distance: string;
+    safetyStatus: SafetyStatus;
+    safetyLabel: string;
     imageUrl?: string;
     address?: string;
 }
