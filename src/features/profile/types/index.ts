@@ -3,7 +3,8 @@ export interface UserProfile {
     fullName: string;
     email: string;
     avatar?: string;
-    country: string;
+    country?: string;
+    joinDate?: string;
 }
 
 export interface UserPreferences {
@@ -30,9 +31,11 @@ export enum DietType {
     Paleo = 'Paleo',
 }
 
+import { Allergen } from '../../auth/types/auth.types';
+
 export interface DietaryProfile {
-    diet: DietType;
-    allergens: string[];
+    diet: string[]; // Changed from DietType to string[] to support multiple
+    allergens: Allergen[];
 }
 
 export interface HealthConnectStatus {

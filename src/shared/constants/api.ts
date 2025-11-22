@@ -4,8 +4,10 @@
  * Based on API_SEC.MD specification
  */
 
+// 10.0.3.224
+// https://26ea34ff3c7b.ngrok-free.app/v1
 export const API_CONFIG = {
-    BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.nutrition-app.com/v1',
+    BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://10.0.3.224:3004/v1',
     TIMEOUT: 30000, // 30 seconds
     VERSION: 'v1',
 } as const;
@@ -43,10 +45,11 @@ export const API_ENDPOINTS = {
         FAVORITE_ITEM: (id: string) => `/food/favorites/${id}`,
     },
 
-    // Menu Translator
+    // Menu Translator (with SSE support)
     MENU: {
-        UPLOAD: '/menu/scan',
-        JOB_STATUS: (jobId: string) => `/menu/scan/job/${jobId}`,
+        UPLOAD_ASYNC: '/menu/upload/scan-async',
+        JOB_STATUS: (jobId: string) => `/menu/jobs/${jobId}`,
+        JOB_STREAM: (jobId: string) => `/menu/jobs/${jobId}/stream`,
     },
 
     // Food Search

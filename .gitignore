@@ -51,9 +51,3 @@ coverage/
 expo-env.d.ts
 # @end expo-cli
 
-# Claude Code & Custom
-.agent/
-.claude/
-flows_images/
-docs/
-*.md

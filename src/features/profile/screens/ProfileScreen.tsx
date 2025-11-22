@@ -7,12 +7,17 @@ import { SummaryCard } from '../components/SummaryCard';
 import { ShortcutGrid } from '../components/ShortcutGrid';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useAllergensAndDiet } from '../hooks/useAllergensAndDiet';
+import { useAuthStore } from '../../../shared/stores/authStore';
+import { BaseButton } from '../../../shared/components/base/BaseButton';
+import { LanguageSelector } from '../components/LanguageSelector';
+
 import { colors, spacing } from '../../../theme';
 
 export const ProfileScreen = () => {
     const router = useRouter();
     const { profile, isLoading: isProfileLoading } = useUserProfile();
-    const { dietaryProfile, isLoading: isDietLoading } = useAllergensAndDiet();
+    const { dietaryProfile, isLoading: isDietLoading, updateDiet, isSaving } = useAllergensAndDiet();
+    const { signOut } = useAuthStore();
 
     const isLoading = isProfileLoading || isDietLoading;
 
@@ -68,6 +73,15 @@ export const ProfileScreen = () => {
         },
     ];
 
+
+
+    const handleLogout = async () => {
+        await signOut();
+        router.replace('/(auth)/welcome');
+    };
+
+
+
     return (
         <Screen
             scrollable={true}
@@ -88,6 +102,10 @@ export const ProfileScreen = () => {
                 />
             )}
 
+            <LanguageSelector />
+
+
+
             <ShortcutGrid
                 title="Health preferences"
                 items={healthShortcuts}
@@ -98,12 +116,30 @@ export const ProfileScreen = () => {
                 items={savedShortcuts}
             />
 
+            <View style={styles.logoutContainer}>
+                <BaseButton
+                    title="Log Out"
+                    variant="outline"
+                    onPress={handleLogout}
+                    fullWidth
+                    style={styles.logoutButton}
+                />
+            </View>
+
             <View style={styles.footerSpacer} />
         </Screen>
     );
 };
 
 const styles = StyleSheet.create({
+    logoutContainer: {
+        paddingHorizontal: spacing.lg,
+        marginTop: spacing.xl,
+        marginBottom: spacing.md,
+    },
+    logoutButton: {
+        borderColor: colors.error,
+    },
     footerSpacer: {
         height: spacing.xl,
     },

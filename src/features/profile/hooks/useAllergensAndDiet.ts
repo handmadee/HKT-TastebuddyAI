@@ -1,85 +1,71 @@
-import { useState, useEffect, useCallback } from 'react';
-import { DietaryProfile, DietType } from '../types';
+import { useAuthStore } from '../../../shared/stores/authStore';
+import { DietaryProfile } from '../types';
 import { userProfileService } from '../services/userProfileService';
+import { useState } from 'react';
 
 export const useAllergensAndDiet = () => {
-    const [dietaryProfile, setDietaryProfile] = useState<DietaryProfile | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { user, updateUser } = useAuthStore();
     const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
-    const fetchDietaryProfile = useCallback(async () => {
-        try {
-            setIsLoading(true);
-            const data = await userProfileService.getDietaryProfile();
-            setDietaryProfile(data);
-            setError(null);
-        } catch (err) {
-            setError('Failed to load dietary profile');
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
+    const dietaryProfile: DietaryProfile | null = user?.onboarding ? {
+        diet: user.onboarding.dietaryPreferences || [],
+        allergens: user.onboarding.allergens || [],
+    } : null;
 
-    const updateDiet = async (diet: DietType) => {
+    const updateOnboarding = async (updates: any) => {
+        if (!user) return;
         try {
             setIsSaving(true);
-            const updated = await userProfileService.updateDietaryProfile({ diet });
-            setDietaryProfile(updated);
-        } catch (err) {
-            setError('Failed to update diet');
-            console.error(err);
+            const updatedUser = await userProfileService.updateProfile({
+                onboarding: {
+                    ...user.onboarding,
+                    ...updates
+                }
+            });
+            updateUser(updatedUser);
+        } catch (error) {
+            console.error('Failed to update profile', error);
         } finally {
             setIsSaving(false);
         }
     };
 
-    const addAllergen = async (allergen: string) => {
-        if (!dietaryProfile) return;
-        if (dietaryProfile.allergens.includes(allergen)) return;
-
-        try {
-            setIsSaving(true);
-            const newAllergens = [...dietaryProfile.allergens, allergen];
-            const updated = await userProfileService.updateDietaryProfile({ allergens: newAllergens });
-            setDietaryProfile(updated);
-        } catch (err) {
-            setError('Failed to add allergen');
-            console.error(err);
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    const removeAllergen = async (allergen: string) => {
+    const updateDiet = async (diet: string) => {
+        // Toggle logic if diet is single select or multi select
+        // Assuming multi-select based on string[] type
         if (!dietaryProfile) return;
 
-        try {
-            setIsSaving(true);
-            const newAllergens = dietaryProfile.allergens.filter(a => a !== allergen);
-            const updated = await userProfileService.updateDietaryProfile({ allergens: newAllergens });
-            setDietaryProfile(updated);
-        } catch (err) {
-            setError('Failed to remove allergen');
-            console.error(err);
-        } finally {
-            setIsSaving(false);
-        }
+        const currentDiets = dietaryProfile.diet;
+        const newDiets = currentDiets.includes(diet)
+            ? currentDiets.filter(d => d !== diet)
+            : [...currentDiets, diet];
+
+        await updateOnboarding({ dietaryPreferences: newDiets });
     };
 
-    useEffect(() => {
-        fetchDietaryProfile();
-    }, [fetchDietaryProfile]);
+    const addAllergen = async (allergenType: string, severity: string = 'medium') => {
+        if (!dietaryProfile) return;
+        if (dietaryProfile.allergens.some(a => a.type === allergenType)) return;
+
+        const newAllergens = [...dietaryProfile.allergens, { type: allergenType, severity }];
+        await updateOnboarding({ allergens: newAllergens });
+    };
+
+    const removeAllergen = async (allergenType: string) => {
+        if (!dietaryProfile) return;
+
+        const newAllergens = dietaryProfile.allergens.filter(a => a.type !== allergenType);
+        await updateOnboarding({ allergens: newAllergens });
+    };
 
     return {
         dietaryProfile,
-        isLoading,
+        isLoading: false,
         isSaving,
-        error,
+        error: null,
         updateDiet,
         addAllergen,
         removeAllergen,
-        refetch: fetchDietaryProfile,
+        refetch: () => { },
     };
 };

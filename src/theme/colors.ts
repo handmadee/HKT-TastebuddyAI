@@ -8,7 +8,10 @@
 export const colors = {
     // Primary Colors
     primary: '#017bff',
+    primaryLight: '#e6f4ff',
     secondary: '#38c85d',
+    success: '#38c85d',
+    successLight: '#e6f9eb',
     accent: '#fe9402',
     error: '#c71518ff',
     info: '#0096ff',
@@ -20,6 +23,7 @@ export const colors = {
     backgroundAlt: '#fff5e4',
     backgroundWhite: '#fffefe',
     backgroundGray: '#f7f7fa',
+    cardBackground: '#ffffff',
 
     // Card & Popup
     card: '#ffffff',
@@ -32,6 +36,7 @@ export const colors = {
     // Text Colors
     textPrimary: '#222222',
     textSecondary: '#555555',
+    textTertiary: '#888888',
     textActive: '#017bff',
     textSuccess: '#38c85d',
     textWarning: '#fe9402',

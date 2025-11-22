@@ -1,11 +1,6 @@
-/**
- * Auth Store - Zustand
- * 
- * Global authentication state management
- */
-
 import { create } from 'zustand';
-import { User } from '../types/common.types';
+import { User } from '../../features/auth/types/auth.types';
+import { authService } from '../../features/auth/services/authService';
 import { secureStorage } from '../services/storage/secureStorage';
 import { logger } from '../services/logger/logger';
 
@@ -13,99 +8,59 @@ interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
     isLoading: boolean;
+    error: string | null;
 
     // Actions
-    setUser: (user: User | null) => void;
-    setLoading: (loading: boolean) => void;
     login: (email: string, password: string) => Promise<void>;
-    register: (fullName: string, email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     hydrateAuth: () => Promise<void>;
+    clearError: () => void;
+    updateUser: (user: User) => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
     user: null,
     isAuthenticated: false,
     isLoading: true,
+    error: null,
 
-    setUser: (user) => {
-        logger.logStateChange('AuthStore', 'setUser', { userId: user?.id });
-        set({ user, isAuthenticated: !!user });
-    },
+    clearError: () => set({ error: null }),
 
-    setLoading: (loading) => {
-        logger.logStateChange('AuthStore', 'setLoading', { loading });
-        set({ isLoading: loading });
-    },
-
-    login: async (email: string, password: string) => {
+    login: async (email, password) => {
+        set({ isLoading: true, error: null });
         logger.info('User attempting login', { email });
+
         try {
-            // TODO: Implement actual API call
-            // const response = await apiClient.post('/auth/login', { email, password });
-            // const { user, accessToken, refreshToken } = response.data;
-
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            // Mock user data
-            const mockUser: User = {
-                id: '1',
-                email,
-                fullName: 'Test User',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            };
+            const response = await authService.login({ email, password });
+            const { accessToken, refreshToken, user } = response;
 
             // Save tokens
-            await secureStorage.saveTokens('mock-access-token', 'mock-refresh-token');
+            await secureStorage.saveTokens(accessToken, refreshToken);
 
-            set({ user: mockUser, isAuthenticated: true });
+            // Save user state
+            set({ user, isAuthenticated: true, isLoading: false });
+
             logger.info('User logged in successfully');
-        } catch (error) {
+        } catch (error: any) {
             logger.error('Login failed', error);
-            throw new Error('Invalid email or password');
-        }
-    },
-
-    register: async (fullName: string, email: string, password: string) => {
-        logger.info('User attempting registration', { email, fullName });
-        try {
-            // TODO: Implement actual API call
-            // const response = await apiClient.post('/auth/register', { fullName, email, password });
-            // const { user, accessToken, refreshToken } = response.data;
-
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            // Mock user data
-            const mockUser: User = {
-                id: '1',
-                email,
-                fullName,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            };
-
-            // Save tokens
-            await secureStorage.saveTokens('mock-access-token', 'mock-refresh-token');
-
-            set({ user: mockUser, isAuthenticated: true });
-
-            // Mark that this is a new user who needs onboarding
-            await secureStorage.setItem('needs_onboarding', 'true');
-
-            logger.info('User registered successfully');
-        } catch (error) {
-            logger.error('Registration failed', error);
-            throw new Error('Registration failed. Email may already be in use.');
+            const errorMessage = error.response?.data?.message || 'Invalid email or password';
+            set({ error: errorMessage, isLoading: false });
+            throw error;
         }
     },
 
     signOut: async () => {
         logger.info('User signing out');
-        await secureStorage.clearTokens();
-        set({ user: null, isAuthenticated: false });
+        set({ isLoading: true });
+
+        try {
+            await authService.logout();
+        } catch (error) {
+            logger.warn('Logout API call failed, proceeding with local cleanup');
+        } finally {
+            await secureStorage.clearTokens();
+            set({ user: null, isAuthenticated: false, isLoading: false });
+        }
     },
 
     hydrateAuth: async () => {
@@ -113,15 +68,37 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const { accessToken } = await secureStorage.getTokens();
             if (accessToken) {
-                // TODO: Fetch user profile with token
-                // const user = await fetchUserProfile();
-                // set({ user, isAuthenticated: true });
-                set({ isAuthenticated: true });
+                // Verify token and get fresh user data
+                try {
+                    const meData = await authService.getMe();
+
+                    // Map MeResponseDto to User interface if needed, or update User interface
+                    // For now, constructing User object from MeResponseDto
+                    const user: User = {
+                        id: meData.userId,
+                        email: meData.email,
+                        fullName: meData.info.fullName,
+                        onboarding: meData.onboarding
+                    };
+
+                    set({ user, isAuthenticated: true });
+                } catch (error) {
+                    logger.warn('Token invalid or expired during hydration');
+                    await secureStorage.clearTokens();
+                    set({ user: null, isAuthenticated: false });
+                }
+            } else {
+                set({ isAuthenticated: false });
             }
         } catch (error) {
-            console.error('Failed to hydrate auth:', error);
+            logger.error('Failed to hydrate auth:', error);
+            set({ isAuthenticated: false });
         } finally {
             set({ isLoading: false });
         }
+    },
+
+    updateUser: (user: User) => {
+        set({ user });
     },
 }));

@@ -5,9 +5,11 @@
  */
 
 import React from 'react';
-import { View, ScrollView, StyleSheet, ViewProps, ViewStyle } from 'react-native';
+import { View, ScrollView, StyleSheet, ViewProps, ViewStyle, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, spacing } from '../../../theme';
+
+import { ScreenHeader } from './ScreenHeader';
 
 interface ScreenProps extends ViewProps {
     children: React.ReactNode;
@@ -15,6 +17,10 @@ interface ScreenProps extends ViewProps {
     safeArea?: boolean;
     backgroundColor?: string;
     padding?: boolean;
+    title?: string;
+    showBack?: boolean;
+    rightAction?: React.ReactNode;
+    onBackPress?: () => void;
 }
 
 export const Screen: React.FC<ScreenProps> = ({
@@ -24,6 +30,10 @@ export const Screen: React.FC<ScreenProps> = ({
     backgroundColor = colors.backgroundWhite,
     padding = true,
     style,
+    title,
+    showBack,
+    rightAction,
+    onBackPress,
     ...rest
 }) => {
     const containerStyle: ViewStyle = {
@@ -38,22 +48,34 @@ export const Screen: React.FC<ScreenProps> = ({
 
     const Wrapper = safeArea ? SafeAreaView : View;
 
-    if (scrollable) {
-        return (
-            <Wrapper style={containerStyle} {...rest}>
-                <ScrollView
-                    contentContainerStyle={contentStyle}
-                    showsVerticalScrollIndicator={false}
-                >
-                    {children}
-                </ScrollView>
-            </Wrapper>
-        );
-    }
-
     return (
-        <Wrapper style={[containerStyle, contentStyle]} {...rest}>
-            {children}
+        <Wrapper style={containerStyle} {...rest}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.flex}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+            >
+                {(title || showBack) && (
+                    <ScreenHeader
+                        title={title}
+                        showBack={showBack}
+                        rightAction={rightAction}
+                        onBackPress={onBackPress}
+                    />
+                )}
+                {scrollable ? (
+                    <ScrollView
+                        contentContainerStyle={contentStyle}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {children}
+                    </ScrollView>
+                ) : (
+                    <View style={[styles.flex, contentStyle]}>
+                        {children}
+                    </View>
+                )}
+            </KeyboardAvoidingView>
         </Wrapper>
     );
 };
@@ -62,5 +84,8 @@ const styles = StyleSheet.create({
     padding: {
         paddingHorizontal: spacing.container.horizontal,
         paddingVertical: spacing.container.vertical,
+    },
+    flex: {
+        flex: 1,
     },
 });

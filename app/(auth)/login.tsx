@@ -22,14 +22,18 @@ interface FormErrors {
 
 export default function LoginScreen() {
     const router = useRouter();
-    const { login } = useAuthStore();
-
+    const { login, error: authError, clearError } = useAuthStore();
     const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+        email: __DEV__ ? 'admin@tastebuddy.ai' : '',
+        password: __DEV__ ? 'Password123!' : '',
     });
     const [errors, setErrors] = useState<FormErrors>({});
     const [loading, setLoading] = useState(false);
+
+    // Clear auth errors on mount
+    React.useEffect(() => {
+        clearError();
+    }, []);
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
@@ -59,17 +63,24 @@ export default function LoginScreen() {
 
         try {
             setLoading(true);
-            // TODO: Implement actual login API call
             await login(formData.email, formData.password);
 
-            // Navigate to main app
+            // Check if user has completed onboarding
+            // We can check the store state after login since it's updated synchronously in the store action (mostly)
+            // But better to rely on the user object returned or just navigate to root and let index.tsx handle it?
+            // Index.tsx handles it based on store state. 
+            // However, since we are in a nested route, we need to trigger the router.
+
+            // Force a check of onboarding status
+            // Ideally, authStore login should have updated the user and onboarding status
+
+            // Simple approach: Navigate to root, index.tsx will redirect
+            // Or navigate explicitly based on known state
             router.replace('/(main)/(tabs)');
         } catch (error) {
-            Alert.alert(
-                'Login Failed',
-                'Invalid email or password. Please try again.',
-                [{ text: 'OK' }]
-            );
+            // Error is handled in store and exposed via authError
+            // We can also show an alert if needed, but inline is better
+            console.error('Login error caught in component:', error);
         } finally {
             setLoading(false);
         }
@@ -94,6 +105,11 @@ export default function LoginScreen() {
                 </View>
 
                 <View style={styles.form}>
+                    {authError && (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>{authError}</Text>
+                        </View>
+                    )}
                     <FormInput
                         label="Email"
                         placeholder="name@example.com"
@@ -206,5 +222,18 @@ const styles = StyleSheet.create({
     footerLink: {
         ...typography.styles.bodyMedium,
         color: colors.primary,
+    },
+    errorContainer: {
+        backgroundColor: 'rgba(199, 21, 24, 0.1)',
+        padding: spacing.sm,
+        borderRadius: 8,
+        marginBottom: spacing.md,
+        borderWidth: 1,
+        borderColor: colors.error,
+    },
+    errorText: {
+        ...typography.styles.bodySmall,
+        color: colors.error,
+        textAlign: 'center',
     },
 });

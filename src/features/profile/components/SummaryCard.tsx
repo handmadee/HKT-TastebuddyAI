@@ -20,7 +20,11 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ profile, dietaryProfil
                 <View style={styles.divider} />
                 <View style={styles.item}>
                     <Text style={styles.label}>Diet</Text>
-                    <Text style={styles.value}>{dietaryProfile.diet}</Text>
+                    <Text style={styles.value}>
+                        {Array.isArray(dietaryProfile.diet)
+                            ? dietaryProfile.diet.join(', ') || 'None'
+                            : dietaryProfile.diet}
+                    </Text>
                 </View>
                 <View style={styles.divider} />
                 <View style={styles.item}>

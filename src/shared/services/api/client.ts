@@ -68,6 +68,16 @@ class ApiClient {
             async (error: AxiosError) => {
                 const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
+                // Log error details for debugging
+                logger.error('API Request Failed', {
+                    method: error.config?.method?.toUpperCase(),
+                    url: error.config?.url,
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    data: error.response?.data,
+                    message: error.message,
+                });
+
                 // Handle 401 Unauthorized - Token refresh
                 if (error.response?.status === 401 && !originalRequest._retry) {
                     originalRequest._retry = true;
@@ -99,11 +109,12 @@ class ApiClient {
                         // Refresh failed - clear tokens and redirect to login
                         await secureStorage.clearTokens();
                         // TODO: Trigger logout and redirect to login
-                        return Promise.reject(refreshError);
+                        return Promise.reject(this.createSerializableError(refreshError));
                     }
                 }
 
-                return Promise.reject(error);
+                // Return a serializable error object
+                return Promise.reject(this.createSerializableError(error));
             }
         );
     }
@@ -160,6 +171,33 @@ class ApiClient {
             },
         });
         return response.data;
+    }
+
+    /**
+     * Create a serializable error object from various error types
+     */
+    private createSerializableError(error: any): Error {
+        if (axios.isAxiosError(error)) {
+            const message = error.response?.data?.message
+                || error.response?.data?.error
+                || error.message
+                || 'An unexpected error occurred';
+
+            const customError = new Error(message);
+            // Attach additional context
+            Object.assign(customError, {
+                status: error.response?.status,
+                statusText: error.response?.statusText,
+                data: error.response?.data,
+            });
+            return customError;
+        }
+
+        if (error instanceof Error) {
+            return error;
+        }
+
+        return new Error(String(error));
     }
 
     /**

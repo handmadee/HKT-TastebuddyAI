@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { colors, spacing, typography } from '../../../theme';
 import { Ionicons } from '@expo/vector-icons';
+import { Allergen } from '../../auth/types/auth.types';
 
 interface AllergenListProps {
-    allergens: string[];
-    onAdd: (allergen: string) => void;
+    allergens: Allergen[];
+    onAdd: (allergen: string, severity?: string) => void;
     onRemove: (allergen: string) => void;
 }
 
@@ -48,9 +49,12 @@ export const AllergenList: React.FC<AllergenListProps> = ({ allergens, onAdd, on
 
             <View style={styles.list}>
                 {allergens.map((allergen) => (
-                    <View key={allergen} style={styles.item}>
-                        <Text style={styles.itemText}>{allergen}</Text>
-                        <TouchableOpacity onPress={() => onRemove(allergen)}>
+                    <View key={allergen.type} style={styles.item}>
+                        <View>
+                            <Text style={styles.itemText}>{allergen.type}</Text>
+                            <Text style={styles.severityText}>{allergen.severity}</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => onRemove(allergen.type)}>
                             <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
                         </TouchableOpacity>
                     </View>
@@ -122,6 +126,10 @@ const styles = StyleSheet.create({
     itemText: {
         ...typography.styles.bodyRegular,
         color: colors.textPrimary,
+    },
+    severityText: {
+        ...typography.styles.caption,
+        color: colors.textSecondary,
     },
     emptyText: {
         ...typography.styles.bodyRegular,

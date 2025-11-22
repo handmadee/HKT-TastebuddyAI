@@ -13,6 +13,8 @@ export const SavedMenusScreen = () => {
             scrollable={false}
             safeArea={true}
             backgroundColor={colors.backgroundGray}
+            title="Saved Menus"
+            showBack={true}
         >
             <FlatList
                 data={menus}

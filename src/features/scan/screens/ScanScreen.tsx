@@ -24,6 +24,7 @@ import { PrimaryCaptureButton } from '../components/PrimaryCaptureButton';
 import { PermissionDeniedScreen } from '../components/PermissionDeniedScreen';
 import { usePermissions } from '../../../shared/hooks/usePermissions';
 import { useScanStore } from '../stores/scanStore';
+import { useOnboardingStore } from '../../onboarding/stores/onboardingStore';
 import { colors } from '../../../theme';
 import { logger } from '../../../shared/services/logger/logger';
 
@@ -42,6 +43,7 @@ export const ScanScreen: React.FC = () => {
 
     const { requestCameraPermission } = usePermissions();
     const { startScan, analyzeFoodImage } = useScanStore();
+    const { allergens, dietaryPreferences, language } = useOnboardingStore();
 
     useEffect(() => {
         requestPermission();
@@ -109,8 +111,12 @@ export const ScanScreen: React.FC = () => {
                 // Navigate to analyzing screen
                 router.push('/scan/analyzing');
 
-                // Start analysis
-                await analyzeFoodImage(photo.uri);
+                // Start analysis with user preferences
+                await analyzeFoodImage(photo.uri, {
+                    allergens: allergens.map(a => ({ type: a.type, severity: a.severity })),
+                    dietaryPreferences: dietaryPreferences || [],
+                    language: language || 'vi',
+                });
             }
         } catch (error) {
             logger.error('Failed to capture image', { error });
@@ -169,8 +175,12 @@ export const ScanScreen: React.FC = () => {
                 // Navigate to analyzing screen
                 router.push('/scan/analyzing');
 
-                // Start analysis
-                await analyzeFoodImage(result.assets[0].uri);
+                // Start analysis with user preferences
+                await analyzeFoodImage(result.assets[0].uri, {
+                    allergens: allergens.map(a => ({ type: a.type, severity: a.severity })),
+                    dietaryPreferences: dietaryPreferences || [],
+                    language: language || 'vi',
+                });
             }
         } catch (error) {
             logger.error('Failed to pick image', { error });

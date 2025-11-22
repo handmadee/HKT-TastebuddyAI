@@ -20,7 +20,9 @@ export const HealthConnectScreen = () => {
         <Screen
             scrollable={true}
             safeArea={true}
-            backgroundColor={colors.backgroundGrabiny}
+            backgroundColor={colors.backgroundGray}
+            title="Health Connect"
+            showBack={true}
         >
             <View style={styles.header}>
                 <Image
