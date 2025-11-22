@@ -61,11 +61,11 @@ export const QuickActionButton: React.FC<QuickActionButtonProps> = ({
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         padding: spacing.lg,
         borderRadius: borderRadius.card,
-        minWidth: 100,
         ...shadows.small,
     },
     primaryContainer: {
