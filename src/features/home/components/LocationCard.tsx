@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.card,
         borderRadius: borderRadius.card,
         padding: spacing.lg,
-        marginBottom: spacing.md,
+        marginRight: spacing.md,
+        width: 280,
         ...shadows.small,
     },
     content: {

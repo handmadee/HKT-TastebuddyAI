@@ -4,8 +4,8 @@
  * Main home screen with featured food and nearby locations
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { colors, spacing, typography, shadows, borderRadius } from '@/theme';
@@ -20,10 +20,30 @@ export const HomeScreen: React.FC = () => {
     const { t } = useTranslation();
     const { user } = useAuthStore();
 
+    // Animation values
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(50)).current;
+
     // Mock data - will be replaced with actual data from stores/API
     const currentCalories = 1240;
     const targetCalories = 1850;
     const userLocation = 'Hanoi, Vietnam';
+
+    // Animate on mount
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 600,
+                useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+                toValue: 0,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, []);
 
     const formatTimestamp = (date: Date) => {
         const now = new Date();
@@ -76,7 +96,15 @@ export const HomeScreen: React.FC = () => {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Quick Actions Section */}
-                <View style={styles.section}>
+                <Animated.View
+                    style={[
+                        styles.section,
+                        {
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }],
+                        },
+                    ]}
+                >
                     <Text style={styles.sectionTitle}>
                         {t('home.quickActions')}
                     </Text>
@@ -87,10 +115,18 @@ export const HomeScreen: React.FC = () => {
                             findFood: t('home.findFood'),
                         }}
                     />
-                </View>
+                </Animated.View>
 
                 {/* Today's Summary Section */}
-                <View style={styles.section}>
+                <Animated.View
+                    style={[
+                        styles.section,
+                        {
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }],
+                        },
+                    ]}
+                >
                     <Text style={styles.sectionTitle}>
                         {t('home.todaysSummary')}
                     </Text>
@@ -99,10 +135,18 @@ export const HomeScreen: React.FC = () => {
                         target={targetCalories}
                         label={t('home.calories')}
                     />
-                </View>
+                </Animated.View>
 
                 {/* Today's Pick Section */}
-                <View style={styles.section}>
+                <Animated.View
+                    style={[
+                        styles.section,
+                        {
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }],
+                        },
+                    ]}
+                >
                     <Text style={styles.sectionTitle}>
                         {t('home.todaysPick')}
                     </Text>
@@ -115,10 +159,18 @@ export const HomeScreen: React.FC = () => {
                             console.log('View food details');
                         }}
                     />
-                </View>
+                </Animated.View>
 
                 {/* Nearby Spots Section */}
-                <View style={styles.section}>
+                <Animated.View
+                    style={[
+                        styles.section,
+                        {
+                            opacity: fadeAnim,
+                            transform: [{ translateY: slideAnim }],
+                        },
+                    ]}
+                >
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>
                             {t('home.nearbySpots')}
@@ -130,21 +182,39 @@ export const HomeScreen: React.FC = () => {
                         </TouchableOpacity>
                     </View>
 
-                    {mockNearbyLocations.map((location) => (
-                        <LocationCard
-                            key={location.id}
-                            name={location.name}
-                            rating={location.rating}
-                            distance={location.distance}
-                            safetyStatus={location.safetyStatus}
-                            safetyLabel={location.safetyLabel}
-                            onPress={() => {
-                                // Navigate to location details
-                                console.log('View location:', location.id);
-                            }}
-                        />
-                    ))}
-                </View>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.horizontalScroll}
+                    >
+                        {mockNearbyLocations.map((location, index) => (
+                            <Animated.View
+                                key={location.id}
+                                style={{
+                                    opacity: fadeAnim,
+                                    transform: [{
+                                        translateX: fadeAnim.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: [50 * (index + 1), 0],
+                                        }),
+                                    }],
+                                }}
+                            >
+                                <LocationCard
+                                    name={location.name}
+                                    rating={location.rating}
+                                    distance={location.distance}
+                                    safetyStatus={location.safetyStatus}
+                                    safetyLabel={location.safetyLabel}
+                                    onPress={() => {
+                                        // Navigate to location details
+                                        console.log('View location:', location.id);
+                                    }}
+                                />
+                            </Animated.View>
+                        ))}
+                    </ScrollView>
+                </Animated.View>
 
                 {/* Bottom padding for tab bar */}
                 <View style={styles.bottomPadding} />
@@ -216,6 +286,9 @@ const styles = StyleSheet.create({
     seeAllText: {
         ...typography.styles.bodyMedium,
         color: colors.primary,
+    },
+    horizontalScroll: {
+        paddingRight: spacing.container.horizontal,
     },
     bottomPadding: {
         height: spacing.xxl,
