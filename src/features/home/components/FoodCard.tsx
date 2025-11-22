@@ -37,6 +37,10 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 )}
             </View>
 
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>{title}</Text>
+            </View>
+
             {onViewDetails && (
                 <BaseButton
                     title="View Details"
@@ -81,6 +85,14 @@ const styles = StyleSheet.create({
         ...typography.styles.bodyTiny,
         color: colors.textPrimary,
         fontWeight: typography.fontWeight.medium,
+    },
+    titleContainer: {
+        padding: spacing.md,
+    },
+    title: {
+        ...typography.styles.h3,
+        color: colors.textPrimary,
+        fontWeight: typography.fontWeight.semibold,
     },
     button: {
         margin: spacing.md,

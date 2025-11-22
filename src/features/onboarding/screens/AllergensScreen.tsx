@@ -46,6 +46,8 @@ export const AllergensScreen: React.FC = () => {
                 removeAllergen(allergen.type);
             }
         });
+        // Store actions are stable, only react to localAllergens changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [localAllergens]);
 
     const handleToggle = (type: AllergenType) => {

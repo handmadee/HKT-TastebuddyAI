@@ -25,8 +25,13 @@ export default function Index() {
     // Load onboarding status from storage
     React.useEffect(() => {
         const loadOnboardingStatus = async () => {
-            await hydrateOnboarding();
-            setIsChecking(false);
+            try {
+                await hydrateOnboarding();
+            } catch (error) {
+                console.error('Failed to hydrate onboarding state:', error);
+            } finally {
+                setIsChecking(false);
+            }
         };
         loadOnboardingStatus();
     }, []);

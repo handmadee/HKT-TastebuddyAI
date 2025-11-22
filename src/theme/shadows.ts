@@ -77,6 +77,17 @@ const shadowConfig = {
             elevation: 4,
         },
     },
+    card: {
+        ios: {
+            shadowColor: '#017bff',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 12,
+        },
+        android: {
+            elevation: 4,
+        },
+    },
 } as const;
 
 /**
@@ -111,6 +122,11 @@ export const shadows = {
     top: Platform.select({
         ios: shadowConfig.top.ios,
         android: shadowConfig.top.android,
+        default: {},
+    }) as any,
+    card: Platform.select({
+        ios: shadowConfig.card.ios,
+        android: shadowConfig.card.android,
         default: {},
     }) as any,
     none: {},

@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { OnboardingContainer } from '../components/OnboardingContainer';
 import { SelectableCard } from '../components/SelectableCard';

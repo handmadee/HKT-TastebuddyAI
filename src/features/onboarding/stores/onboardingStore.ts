@@ -5,6 +5,7 @@
  */
 
 import { create } from 'zustand';
+import { calculateBMR as sharedCalculateBMR } from '../../../shared/utils/calculations';
 import {
     OnboardingState,
     DietaryPreference,
@@ -17,17 +18,6 @@ import {
     HealthGoal,
     Gender,
 } from '../types';
-
-/**
- * Calculate BMR (Basal Metabolic Rate) using Mifflin-St Jeor Equation
- */
-const calculateBMR = (weight: number, height: number, age: number, gender: Gender): number => {
-    if (gender === 'male') {
-        return 10 * weight + 6.25 * height - 5 * age + 5;
-    } else {
-        return 10 * weight + 6.25 * height - 5 * age - 161;
-    }
-};
 
 /**
  * Calculate TDEE (Total Daily Energy Expenditure)
@@ -171,7 +161,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
         const { weight, height, age, gender, activityLevel, goal } = nutritionGoals;
 
         // Calculate BMR and TDEE
-        const bmr = calculateBMR(weight, height, age, gender);
+        const bmr = sharedCalculateBMR(weight, height, age, gender);
         const tdee = calculateTDEE(bmr, activityLevel);
 
         // Calculate calorie target based on goal

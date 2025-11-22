@@ -90,10 +90,11 @@ export const useAuthStore = create<AuthState>((set) => ({
             // Save tokens
             await secureStorage.saveTokens('mock-access-token', 'mock-refresh-token');
 
+            set({ user: mockUser, isAuthenticated: true });
+
             // Mark that this is a new user who needs onboarding
             await secureStorage.setItem('needs_onboarding', 'true');
 
-            set({ user: mockUser, isAuthenticated: true });
             logger.info('User registered successfully');
         } catch (error) {
             logger.error('Registration failed', error);
