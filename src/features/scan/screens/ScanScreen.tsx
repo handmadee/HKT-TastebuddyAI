@@ -9,6 +9,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { CameraView, CameraType } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import { BlurView } from 'expo-blur';
+import * as Haptics from 'expo-haptics';
 import { Screen } from '../../../shared/components/layout/Screen';
 import { CaptureButton } from '../components/CaptureButton';
 import { usePermissions } from '../../../shared/hooks/usePermissions';
@@ -71,6 +73,7 @@ export const ScanScreen: React.FC = () => {
     };
 
     const toggleCameraType = () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         setCameraType((current) => (current === 'back' ? 'front' : 'back'));
     };
 
@@ -142,23 +145,29 @@ export const ScanScreen: React.FC = () => {
                 <View style={styles.overlay}>
                     {/* Top bar */}
                     <View style={styles.topBar}>
-                        <TouchableOpacity
-                            style={styles.iconButton}
-                            onPress={() => router.back()}
-                        >
-                            <Text style={styles.iconButtonText}>✕</Text>
-                        </TouchableOpacity>
+                        <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
+                        <View style={styles.topBarContent}>
+                            <TouchableOpacity
+                                style={styles.iconButton}
+                                onPress={() => {
+                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                    router.back();
+                                }}
+                            >
+                                <Text style={styles.iconButtonText}>✕</Text>
+                            </TouchableOpacity>
 
-                        <View style={styles.topBarCenter}>
-                            <Text style={styles.hintText}>Good lighting helps with accuracy</Text>
+                            <View style={styles.topBarCenter}>
+                                <Text style={styles.hintText}>Good lighting helps with accuracy</Text>
+                            </View>
+
+                            <TouchableOpacity
+                                style={styles.iconButton}
+                                onPress={toggleCameraType}
+                            >
+                                <Text style={styles.iconButtonText}>🔄</Text>
+                            </TouchableOpacity>
                         </View>
-
-                        <TouchableOpacity
-                            style={styles.iconButton}
-                            onPress={toggleCameraType}
-                        >
-                            <Text style={styles.iconButtonText}>🔄</Text>
-                        </TouchableOpacity>
                     </View>
 
                     {/* Guide frame */}
@@ -175,21 +184,27 @@ export const ScanScreen: React.FC = () => {
 
                     {/* Bottom bar with capture button */}
                     <View style={styles.bottomBar}>
-                        <View style={styles.bottomBarSpacer} />
+                        <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
+                        <View style={styles.bottomBarContent}>
+                            <View style={styles.bottomBarSpacer} />
 
-                        <CaptureButton
-                            onPress={handleCapture}
-                            loading={isCapturing}
-                            disabled={isCapturing}
-                        />
+                            <CaptureButton
+                                onPress={handleCapture}
+                                loading={isCapturing}
+                                disabled={isCapturing}
+                            />
 
-                        <View style={styles.bottomBarSpacer}>
-                            <TouchableOpacity
-                                style={styles.galleryButton}
-                                onPress={handlePickImage}
-                            >
-                                <Text style={styles.galleryButtonText}>🖼️</Text>
-                            </TouchableOpacity>
+                            <View style={styles.bottomBarSpacer}>
+                                <TouchableOpacity
+                                    style={styles.galleryButton}
+                                    onPress={() => {
+                                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                                        handlePickImage();
+                                    }}
+                                >
+                                    <Text style={styles.galleryButtonText}>🖼️</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -201,7 +216,7 @@ export const ScanScreen: React.FC = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.backgroundBlack,
+        backgroundColor: colors.backgroundMain,
     },
     camera: {
         flex: 1,
@@ -240,17 +255,21 @@ const styles = StyleSheet.create({
         borderRadius: borderRadius.button,
     },
     permissionButtonText: {
-        ...typography.styles.bodyLarge,
+        ...typography.styles.bodyRegular,
         color: colors.backgroundWhite,
         fontWeight: typography.fontWeight.semibold,
     },
     topBar: {
+        width: '100%',
+        overflow: 'hidden',
+        backgroundColor: 'transparent',
+    },
+    topBarContent: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.lg,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     topBarCenter: {
         flex: 1,
@@ -293,7 +312,7 @@ const styles = StyleSheet.create({
         paddingVertical: spacing.lg,
     },
     instructionsText: {
-        ...typography.styles.bodyLarge,
+        ...typography.styles.bodyRegular,
         color: colors.backgroundWhite,
         fontWeight: typography.fontWeight.medium,
         textAlign: 'center',
@@ -303,12 +322,16 @@ const styles = StyleSheet.create({
         borderRadius: borderRadius.badge,
     },
     bottomBar: {
+        width: '100%',
+        overflow: 'hidden',
+        backgroundColor: 'transparent',
+    },
+    bottomBarContent: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: spacing.xl,
         paddingVertical: spacing.xl,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
     bottomBarSpacer: {
         flex: 1,

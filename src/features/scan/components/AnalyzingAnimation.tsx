@@ -19,29 +19,29 @@ export const AnalyzingAnimation: React.FC<AnalyzingAnimationProps> = ({
     const rotateAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        // Pulse animation
+        // Pulse animation - more organic breathing effect
         const pulseAnimation = Animated.loop(
             Animated.sequence([
                 Animated.timing(scaleAnim, {
-                    toValue: 1.2,
-                    duration: 1000,
+                    toValue: 1.15,
+                    duration: 1500,
                     easing: Easing.inOut(Easing.ease),
                     useNativeDriver: true,
                 }),
                 Animated.timing(scaleAnim, {
                     toValue: 1,
-                    duration: 1000,
+                    duration: 1500,
                     easing: Easing.inOut(Easing.ease),
                     useNativeDriver: true,
                 }),
             ])
         );
 
-        // Rotation animation
+        // Rotation animation - slower, smoother
         const rotateAnimation = Animated.loop(
             Animated.timing(rotateAnim, {
                 toValue: 1,
-                duration: 2000,
+                duration: 8000,
                 easing: Easing.linear,
                 useNativeDriver: true,
             })
@@ -126,6 +126,9 @@ const styles = StyleSheet.create({
     },
     icon: {
         fontSize: 80,
+        textShadowColor: 'rgba(0, 0, 0, 0.1)',
+        textShadowOffset: { width: 0, height: 4 },
+        textShadowRadius: 10,
     },
     message: {
         ...typography.styles.h2,

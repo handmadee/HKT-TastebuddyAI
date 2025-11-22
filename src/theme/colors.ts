@@ -10,9 +10,10 @@ export const colors = {
     primary: '#017bff',
     secondary: '#38c85d',
     accent: '#fe9402',
-    error: '#ff4d4f',
+    error: '#c71518ff',
     info: '#0096ff',
     disabled: '#888888',
+    errorLight: '#c6271bff',
 
     // Background Colors
     backgroundMain: '#e6f9eb',
