@@ -4,13 +4,13 @@
     "slug": "tastebuddy-ai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/logo.jpg",
+    "icon": "./assets/icons/TasteBuddyAi.png",
     "userInterfaceStyle": "automatic",
     "scheme": "tastebuddy",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash_professional.png",
       "resizeMode": "contain",
-      "backgroundColor": "#017bff"
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -27,8 +27,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/logo.jpg",
-        "backgroundColor": "#017bff"
+        "foregroundImage": "./assets/icons/TasteBuddyAi.png",
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.tastebuddy.ai",
       "permissions": [
@@ -43,7 +43,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/icons/favlogo.jpg"
+      "favicon": "./assets/icons/TasteBuddyAi.png"
     },
     "plugins": [
       "expo-router",
