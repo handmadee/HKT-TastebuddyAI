@@ -4,12 +4,11 @@
  * Warning screen showing detected allergens
  */
 
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Animated, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '../../../shared/components/layout/Screen';
 import { BaseButton } from '../../../shared/components/base/BaseButton';
-import { AllergenAlert } from '../components/AllergenAlert';
 import { useScanStore } from '../stores/scanStore';
 import { useOnboardingStore } from '../../onboarding/stores/onboardingStore';
 import {
@@ -18,12 +17,59 @@ import {
     generateAllergenWarningMessage,
     calculateSafetyScore,
 } from '../utils/allergenChecker';
-import { colors, spacing, typography, borderRadius } from '../../../theme';
+import { DetectedAllergen } from '../types';
+import { colors, spacing, typography, borderRadius, shadows } from '../../../theme';
 
 export const AllergenWarningScreen: React.FC = () => {
     const router = useRouter();
     const { currentScan, saveScanResult } = useScanStore();
     const { allergens: userAllergens } = useOnboardingStore();
+
+    // Animation refs
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(50)).current;
+    const shakeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        // Entrance animations
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 500,
+                useNativeDriver: true,
+            }),
+            Animated.spring(slideAnim, {
+                toValue: 0,
+                tension: 50,
+                friction: 7,
+                useNativeDriver: true,
+            }),
+        ]).start();
+
+        // Warning shake animation
+        Animated.sequence([
+            Animated.timing(shakeAnim, {
+                toValue: 10,
+                duration: 100,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnim, {
+                toValue: -10,
+                duration: 100,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnim, {
+                toValue: 10,
+                duration: 100,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnim, {
+                toValue: 0,
+                duration: 100,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, []);
 
     if (!currentScan) {
         router.replace('/scan');
@@ -44,140 +90,222 @@ export const AllergenWarningScreen: React.FC = () => {
         router.replace('/scan');
     };
 
+    const handleSeeAlternatives = () => {
+        // TODO: Navigate to alternatives screen
+        // For now, just go to home
+        router.push('/(main)/(tabs)');
+    };
+
     return (
-        <Screen safeArea padding>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollContent}
+        <Screen>
+            <Animated.View
+                style={[
+                    styles.container,
+                    {
+                        opacity: fadeAnim,
+                        transform: [{ translateY: slideAnim }],
+                    },
+                ]}
             >
-                {/* Warning Alert */}
-                <AllergenAlert
-                    allergens={matchedAllergens}
-                    severity={severityLevel}
-                    message={warningMessage}
-                />
-
-                {/* Food Info Card */}
-                <View style={styles.foodCard}>
-                    <Text style={styles.foodName}>{currentScan.name}</Text>
-                    <Text style={styles.confidence}>
-                        Confidence: {currentScan.confidence}%
-                    </Text>
-
-                    <View style={styles.safetyScoreContainer}>
-                        <Text style={styles.safetyScoreLabel}>Safety Score</Text>
-                        <Text
-                            style={[
-                                styles.safetyScore,
-                                {
-                                    color:
-                                        safetyScore >= 80
-                                            ? colors.success
-                                            : safetyScore >= 50
-                                            ? colors.warning
-                                            : colors.error,
-                                },
-                            ]}
-                        >
-                            {safetyScore}/100
-                        </Text>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.scrollContent}
+                >
+                    {/* Food Image */}
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={{ uri: currentScan.imageUri }}
+                            style={styles.image}
+                        />
                     </View>
-                </View>
 
-                {/* Allergen Count */}
-                <View style={styles.allergenCountCard}>
-                    <Text style={styles.allergenCountTitle}>
-                        Contains {matchedAllergens.length} allergen
-                        {matchedAllergens.length !== 1 ? 's' : ''} from your profile
-                    </Text>
-                    <Text style={styles.allergenCountSubtitle}>
-                        Based on your allergen profile, we recommend avoiding this dish.
-                    </Text>
-                </View>
+                    {/* Warning Card */}
+                    <Animated.View
+                        style={[
+                            styles.warningCard,
+                            { transform: [{ translateX: shakeAnim }] },
+                        ]}
+                    >
+                        <Text style={styles.warningTitle}>Warning:</Text>
+                        <Text style={styles.warningMessage}>Do not eat this dish</Text>
+                        <Text style={styles.warningSubtitle}>
+                            We detected critical allergens in this dish.
+                        </Text>
+                    </Animated.View>
 
-                {/* Action Buttons */}
-                <View style={styles.buttonContainer}>
-                    <BaseButton
-                        title="View Full Details"
-                        variant="secondary"
-                        size="large"
-                        onPress={handleViewDetails}
-                        fullWidth
-                        style={styles.button}
-                    />
+                    {/* Critical Allergens Section */}
+                    <View style={styles.allergensSection}>
+                        <Text style={styles.sectionTitle}>
+                            CRITICAL ALLERGENS FOR YOUR PROFILE
+                        </Text>
 
-                    <BaseButton
-                        title="Scan Another Dish"
-                        variant="primary"
-                        size="large"
-                        onPress={handleScanAgain}
-                        fullWidth
-                        style={styles.button}
-                    />
-                </View>
-            </ScrollView>
+                        {matchedAllergens.map((allergen, index) => (
+                            <AllergenItem key={index} allergen={allergen} />
+                        ))}
+                    </View>
+
+                    {/* Action Buttons */}
+                    <View style={styles.buttonContainer}>
+                        <BaseButton
+                            title="View details"
+                            variant="secondary"
+                            size="large"
+                            onPress={handleViewDetails}
+                            fullWidth
+                            style={styles.viewDetailsButton}
+                        />
+
+                        <BaseButton
+                            title="See alternatives"
+                            variant="secondary"
+                            size="large"
+                            onPress={handleSeeAlternatives}
+                            fullWidth
+                            style={styles.alternativesButton}
+                        />
+                    </View>
+                </ScrollView>
+            </Animated.View>
         </Screen>
     );
 };
 
+// Allergen Item Component
+interface AllergenItemProps {
+    allergen: DetectedAllergen;
+}
+
+const AllergenItem: React.FC<AllergenItemProps> = ({ allergen }) => {
+    const getIcon = (severity: string) => {
+        switch (severity) {
+            case 'severe':
+                return '🔴';
+            case 'moderate':
+                return '⚠️';
+            default:
+                return '🟡';
+        }
+    };
+
+    const getRisk = (severity: string) => {
+        switch (severity) {
+            case 'severe':
+                return 'Life-threatening. Risk: Anaphylaxis.';
+            case 'moderate':
+                return 'Severe. Risk: Hives, swelling.';
+            default:
+                return 'Mild discomfort.';
+        }
+    };
+
+    return (
+        <View style={styles.allergenItem}>
+            <Text style={styles.allergenIcon}>{getIcon(allergen.severity)}</Text>
+            <View style={styles.allergenContent}>
+                <Text style={styles.allergenName}>
+                    {allergen.type.charAt(0).toUpperCase() + allergen.type.slice(1)}{' '}
+                    {allergen.source ? `(${allergen.source})` : ''}
+                </Text>
+                <Text style={styles.allergenRisk}>
+                    Your allergy: {getRisk(allergen.severity)}
+                </Text>
+            </View>
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: colors.error,
+    },
     scrollContent: {
-        paddingBottom: spacing.xxl,
+        paddingBottom: spacing.xxxl,
     },
-    foodCard: {
-        backgroundColor: colors.card,
+    imageContainer: {
+        margin: spacing.lg,
         borderRadius: borderRadius.card,
-        padding: spacing.lg,
-        marginBottom: spacing.lg,
+        overflow: 'hidden',
+        borderWidth: 4,
+        borderColor: colors.backgroundWhite,
+        ...shadows.strong,
     },
-    foodName: {
-        ...typography.styles.h2,
-        color: colors.textPrimary,
+    image: {
+        width: '100%',
+        height: 200,
+    },
+    warningCard: {
+        backgroundColor: colors.error,
+        paddingHorizontal: spacing.xl,
+        paddingVertical: spacing.lg,
+    },
+    warningTitle: {
+        ...typography.styles.h1,
+        color: colors.backgroundWhite,
         fontWeight: typography.fontWeight.bold,
         marginBottom: spacing.xs,
     },
-    confidence: {
-        ...typography.styles.bodyRegular,
-        color: colors.textSecondary,
-        marginBottom: spacing.lg,
-    },
-    safetyScoreContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingTop: spacing.md,
-        borderTopWidth: 1,
-        borderTopColor: colors.border,
-    },
-    safetyScoreLabel: {
-        ...typography.styles.bodyLarge,
-        color: colors.textPrimary,
-        fontWeight: typography.fontWeight.medium,
-    },
-    safetyScore: {
-        ...typography.styles.h2,
+    warningMessage: {
+        ...typography.styles.h1,
+        color: colors.backgroundWhite,
         fontWeight: typography.fontWeight.bold,
+        marginBottom: spacing.md,
     },
-    allergenCountCard: {
-        backgroundColor: colors.errorLight,
+    warningSubtitle: {
+        ...typography.styles.bodyLarge,
+        color: colors.backgroundWhite,
+        lineHeight: 24,
+    },
+    allergensSection: {
+        backgroundColor: colors.backgroundWhite,
+        margin: spacing.lg,
         borderRadius: borderRadius.card,
         padding: spacing.lg,
-        marginBottom: spacing.xl,
+        ...shadows.card,
     },
-    allergenCountTitle: {
-        ...typography.styles.bodyLarge,
-        color: colors.error,
-        fontWeight: typography.fontWeight.semibold,
-        marginBottom: spacing.sm,
-    },
-    allergenCountSubtitle: {
-        ...typography.styles.bodyRegular,
+    sectionTitle: {
+        ...typography.styles.bodySmall,
         color: colors.textSecondary,
+        fontWeight: typography.fontWeight.semibold,
+        letterSpacing: 0.5,
+        marginBottom: spacing.lg,
+    },
+    allergenItem: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        paddingVertical: spacing.md,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.border,
+    },
+    allergenIcon: {
+        fontSize: 24,
+        marginRight: spacing.md,
+        marginTop: 2,
+    },
+    allergenContent: {
+        flex: 1,
+    },
+    allergenName: {
+        ...typography.styles.bodyLarge,
+        color: colors.textPrimary,
+        fontWeight: typography.fontWeight.semibold,
+        marginBottom: spacing.xs,
+    },
+    allergenRisk: {
+        ...typography.styles.bodySmall,
+        color: colors.error,
+        lineHeight: 18,
     },
     buttonContainer: {
+        paddingHorizontal: spacing.lg,
         gap: spacing.md,
     },
-    button: {
-        marginBottom: spacing.sm,
+    viewDetailsButton: {
+        backgroundColor: colors.backgroundWhite,
+        borderWidth: 0,
+    },
+    alternativesButton: {
+        backgroundColor: 'transparent',
+        borderWidth: 0,
     },
 });
